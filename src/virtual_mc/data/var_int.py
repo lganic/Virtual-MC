@@ -1,7 +1,10 @@
 SEGMENT_BITS = 0x7F
 CONTINUE_BIT = 0x80
 
-SIGNAL_FLAG = 0xFFFFFFFFFFFFFFFFFF80
+SIGNAL_FLAG = 0xFFFFFFFFFFFFFF80
+
+INT_SIGN_FLAG = 0x80000000
+LONG_SIGN_FLAG = 0x8000000000000000
 
 def read_var_int(data: bytes, is_long=True) -> int:
     """
@@ -20,7 +23,7 @@ def read_var_int(data: bytes, is_long=True) -> int:
         value |= (current_byte & SEGMENT_BITS) << shift
 
         if (current_byte & CONTINUE_BIT) == 0:
-            return value
+            break
 
         shift += 7
 
@@ -29,8 +32,15 @@ def read_var_int(data: bytes, is_long=True) -> int:
 
         elif not is_long and shift >= 32:
             raise ValueError('VarInt is too big!')
+        
+    if is_long and value & LONG_SIGN_FLAG != 0:
+        value = LONG_SIGN_FLAG - value
 
-    raise ValueError('Incomplete var int data!')  # If we run out of bytes without terminating
+    elif not is_long and value & INT_SIGN_FLAG != 0:
+        value = INT_SIGN_FLAG - value
+
+    return value
+
 
 def write_var_int(num: int, is_long = True) -> bytes:
     """
@@ -43,7 +53,7 @@ def write_var_int(num: int, is_long = True) -> bytes:
 
     # Include sign bit as literal portion of number
     if num < 0:
-        sign_bit = 0x80000000000000000000 if is_long else 0x8000000000
+        sign_bit = LONG_SIGN_FLAG if is_long else INT_SIGN_FLAG
 
         abs_num |= sign_bit
 
@@ -63,5 +73,7 @@ def write_var_int(num: int, is_long = True) -> bytes:
             return output_bytes
         
         output_bytes += bytes([(abs_num & SEGMENT_BITS) | CONTINUE_BIT])
+
+        output_bytes_size += 1
 
         abs_num >>= 7

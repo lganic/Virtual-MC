@@ -73,8 +73,9 @@ def test_read_var_int_too_big():
     (25565, bytes([0xDD, 0xC7, 0x01]), [221, 199, 1], False),
     (2097151, bytes([0xFF, 0xFF, 0x7F]), [255, 255, 127], False),
     (2147483647, bytes([0xFF, 0xFF, 0xFF, 0xFF, 0x07]), [255, 255, 255, 255, 7], False),
-    (-1, bytes([0xFF, 0x0F]), [255, 15], False),
-    (-2147483648, bytes([0x80, 0x80, 0x80, 0x80, 0x08]), [128, 128, 128, 128, 8], False),
+    (-1, bytes([0x81, 0x80, 0x80, 0x80, 0x08]), [129, 128, 128, 128, 8], False),
+    (-1073741824, bytes([0x80, 0x80, 0x80, 0x80, 0x0C]), [128, 128, 128, 128, 12], False),
+    (-4611686018427387904, bytes([0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0xC0, 0x01]), [128, 128, 128, 128, 128, 128, 128, 128, 192, 1], True),
 ])
 def test_var_int(value, hex_bytes, decimal_bytes, is_long):
     # Test read_var_int

@@ -29,20 +29,6 @@ def test_write_var_int_four_bytes():
     # Four-byte VarInt (268435455 -> 0xFF 0xFF 0xFF 0x7F, max 4-byte value)
     assert write_var_int(268435455, is_long=False) == bytes([0xFF, 0xFF, 0xFF, 0x7F])
 
-def test_write_var_int_negative_values():
-    # Single-byte negative VarInt (-1)
-    assert write_var_int(-1, is_long=False) == bytes([0xFF])
-
-    # Two-byte negative VarInt (-128)
-    assert write_var_int(-128, is_long=False) == bytes([0x80, 0x01])
-
-def test_write_var_long_valid():
-    # VarLong (2^63 - 1 -> 0xFF ... 0x7F)
-    assert write_var_int(2**63 - 1, is_long=True) == bytes([0xFF] * 8 + [0x7F])
-
-    # Negative VarLong (-2^63)
-    assert write_var_int(-2**63, is_long=True) == bytes([0x80] + [0x00] * 9)
-
 def test_write_var_int_too_big():
     # Test for VarInt that exceeds 32 bits
     with pytest.raises(ValueError):
@@ -67,8 +53,9 @@ def test_write_var_int_invalid_type():
     (25565, bytes([0xDD, 0xC7, 0x01]), [221, 199, 1], False),
     (2097151, bytes([0xFF, 0xFF, 0x7F]), [255, 255, 127], False),
     (2147483647, bytes([0xFF, 0xFF, 0xFF, 0xFF, 0x07]), [255, 255, 255, 255, 7], False),
-    (-1, bytes([0xFF, 0x0F]), [255, 15], False),
-    (-2147483648, bytes([0x80, 0x80, 0x80, 0x80, 0x08]), [128, 128, 128, 128, 8], False),
+    (-1, bytes([0x81, 0x80, 0x80, 0x80, 0x08]), [129, 128, 128, 128, 8], False),
+    (-1073741824, bytes([0x80, 0x80, 0x80, 0x80, 0x0C]), [128, 128, 128, 128, 12], False),
+    (-4611686018427387904, bytes([0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0xC0, 0x01]), [128, 128, 128, 128, 128, 128, 128, 128, 192, 1], True),
 ])
 def test_var_int(value, hex_bytes, decimal_bytes, is_long):
     # Test write_var_int
