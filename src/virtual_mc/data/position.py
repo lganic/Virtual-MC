@@ -28,4 +28,4 @@ def convert_position_to_long(x: Number, y: Number, z:Number) -> int:
     z_c = convert_to_2s_complement(z, 26)
 
     # Assemble final long
-    return (x_c << 36) + (z_c << 36) + y_c
+    return (x_c << 38) + (z_c << 12) + y_c
