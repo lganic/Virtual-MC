@@ -5,6 +5,7 @@ def read_var_int(data: bytes, is_long=True) -> int:
     """
     Convert var int from bytes to an int
     """
+    
     if not isinstance(data, bytes):
         raise TypeError('Need bytes for conversion')
 
