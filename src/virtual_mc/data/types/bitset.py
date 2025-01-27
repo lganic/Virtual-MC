@@ -11,7 +11,7 @@ class BitSet(Byteable_Object):
     def __init__(self, num: int):
 
         self.bits = [False] * num
-
+    
     def to_bytes(self):
 
         output_array = PrefixedArray()
@@ -27,3 +27,20 @@ class BitSet(Byteable_Object):
     def set(self, index):
 
         self.bits[index] = True
+
+    def set_states(self, states: str):
+
+        '''
+        Takes in a string of 0 and 1, i.e : "0100010111"
+
+        Sets the bitset states to the states in the string
+        '''
+
+        if len(states) != len(self.bits):
+            raise ValueError('The length of the given string and the size of the bitset do not match')
+        
+        for i, value in enumerate(states):
+
+            index_state = value == '1'
+
+            self.bits[i] = index_state
