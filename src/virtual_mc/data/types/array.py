@@ -7,6 +7,9 @@ class Array(Byteable_Object):
 
     objects: List[Byteable_Object]
 
+    def __init__(self):
+        self.objects = list()
+
     def to_bytes(self) -> bytes:
         
         output = bytes() # No length for generic arrays
@@ -21,6 +24,9 @@ class Array(Byteable_Object):
         self.objects.append(obj)
 
 class PrefixedArray(Array):
+
+    def __init__(self):
+        super().__init__()
     
     def to_bytes(self):
 
