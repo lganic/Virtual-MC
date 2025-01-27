@@ -1,3 +1,4 @@
+import struct
 from .generic import Byteable_Object
 from ...exceptions import check_range
 from ..var_int import write_var_int
@@ -31,3 +32,8 @@ class VarInt(Byteable_Object, int):
     def to_bytes(self):
         
         return write_var_int(int(self))
+
+class Float(Byteable_Object, float):
+
+    def to_bytes(self):
+        return struct.pack('f', float(self))
