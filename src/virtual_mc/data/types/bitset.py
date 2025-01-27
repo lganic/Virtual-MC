@@ -1,6 +1,7 @@
 from .generic import Byteable_Object
 from .numbers import Long
-from .array import PrefixedArray
+from .array import Array
+from ..var_int import write_var_int
 
 class BitSet(Byteable_Object):
 
@@ -27,13 +28,17 @@ class BitSet(Byteable_Object):
 
     def to_bytes(self):
 
-        output_array = PrefixedArray()
+        output_array = Array()
 
-        for long_value in self.to_long_array():
+        long_array = self.to_long_array()
+
+        for long_value in long_array:
 
             output_array.add_object(Long(long_value))
         
-        return output_array.to_bytes()
+        num_longs = len(long_array)
+
+        return write_var_int(num_longs) + output_array.to_bytes()
     
     def set(self, index):
 
