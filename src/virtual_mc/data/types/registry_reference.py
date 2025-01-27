@@ -10,7 +10,7 @@ class RegistryReference(Byteable_Object):
         self.value: Optional[Byteable_Object] = value
 
     @staticmethod
-    def from_reference(self, registry_id: int):
+    def from_reference(registry_id: int):
         '''
         Create a non-inline reference to a certain registry id
         '''
@@ -21,7 +21,7 @@ class RegistryReference(Byteable_Object):
         return RegistryReference(id = id, value = value)
     
     @staticmethod
-    def from_value(self, value: Byteable_Object):
+    def from_value(value: Byteable_Object):
         '''
         Create an inline reference using the given data
         '''
