@@ -19,7 +19,7 @@ class BitSet(Byteable_Object):
         for i in range(0, len(self.bits), 64):
 
             chunk = self.bits[i: i + 64]
-            long_value = int(chunk[::-1], 2) # Convert reversed chunk into number
+            long_value = int("".join(str(int(bit)) for bit in chunk[::-1]), 2)  # Convert reversed chunk into binary string and then to an integer
 
             output_array.append(long_value)
         
