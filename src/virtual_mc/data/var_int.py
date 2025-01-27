@@ -47,6 +47,9 @@ def write_var_int(num: int, is_long = True) -> bytes:
     Convert an int to var int bytes
     """
 
+    if not isinstance(num, int):
+        raise TypeError(f'An int is required for conversion: {num}')
+
     output_bytes = bytes()
 
     abs_num = abs(num)
