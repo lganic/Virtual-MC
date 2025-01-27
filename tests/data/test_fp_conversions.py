@@ -105,12 +105,12 @@ from virtual_mc.data.fixed_point import convert_from_fixed_point, convert_to_fix
 ])
 def test_value_conversion(value):
 
-    allign = 32
+    align = 32
 
-    from_value = convert_to_fixed_point(value, allign)
+    from_value = convert_to_fixed_point(value, align)
 
     assert isinstance(from_value, int)
 
-    to_value = convert_from_fixed_point(from_value, allign)
+    to_value = convert_from_fixed_point(from_value, align)
 
     assert to_value == pytest.approx(value)
