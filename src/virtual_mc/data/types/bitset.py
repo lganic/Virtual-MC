@@ -11,15 +11,26 @@ class BitSet(Byteable_Object):
     def __init__(self, num: int):
 
         self.bits = [False] * num
-    
-    def to_bytes(self):
 
-        output_array = PrefixedArray()
+    def to_long_array(self):
+
+        output_array = []
 
         for i in range(0, len(self.bits), 64):
 
             chunk = self.bits[i: i + 64]
             long_value = int(chunk[::-1], 2) # Convert reversed chunk into number
+
+            output_array.append(long_value)
+        
+        return output_array
+
+    def to_bytes(self):
+
+        output_array = PrefixedArray()
+
+        for long_value in self.to_long_array():
+
             output_array.add_object(Long(long_value))
         
         return output_array.to_bytes()
