@@ -1,5 +1,6 @@
 from .generic import Byteable_Object
 from ...exceptions import check_range
+from ..var_int import write_var_int
 
 class Number(Byteable_Object):
 
@@ -24,3 +25,9 @@ class Long(Number):
 class Int(Number):
 
     N = 4
+
+class VarInt(Byteable_Object, int):
+    
+    def to_bytes(self):
+        
+        return write_var_int(int(self))
