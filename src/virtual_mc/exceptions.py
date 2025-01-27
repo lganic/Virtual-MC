@@ -4,6 +4,8 @@ class OutOfRange(Exception):
 def check_range(value: int, minimum_valid: int, maximum_valid: int, name = 'Value'):
     '''
     Check the range of a given variable, and ensure that it within the specified (inclusive) range
+
+    Raises OutOfRange error if the value is not within the specified range
     '''
 
     if value > maximum_valid:
