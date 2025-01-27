@@ -1,15 +1,13 @@
-from typing import Union
+from typing import Optional
 from .generic import Byteable_Object
 from ..var_int import write_var_int
-
-NONETYPE = type(None)
 
 class RegistryReference(Byteable_Object):
     
     def __init__(self, id = 0, value = None):
 
         self.id: int = id
-        self.value: Union[Byteable_Object, NONETYPE] = value
+        self.value: Optional[Byteable_Object] = value
 
     @staticmethod
     def from_reference(self, registry_id: int):
