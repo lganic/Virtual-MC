@@ -131,3 +131,25 @@ class NBT_LongArray(_NBT_Length_Prefixed_Array):
 
     objects: List[NBT_Long]
     default_type = TAG_LONG_ARRAY
+
+class NBT_List(_NBT_Length_Prefixed_Array):
+
+    default_type = TAG_LIST
+
+    def __init__(self, object_type, name):
+
+        self.object_type = object_type
+
+        super().__init__(name)
+    
+    def payload(self):
+
+        if len(self.objects) == 0:
+
+            base = bytes([TAG_END]) # Empty array, use end tag for type rather than object type
+        
+        else:
+
+            base = bytes([self.object_type])
+
+        return base + super().payload()
