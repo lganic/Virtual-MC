@@ -4,7 +4,7 @@ from .tag import NBT_Tag
 from .type_ids import TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE, TAG_END, TAG_COMPOUND, TAG_STRING
 from .nbt_util import encode_short
 
-class NBT_Numeric(NBT_Tag):
+class _NBT_Numeric(NBT_Tag):
     """comparable to int with an intrinsic name"""
 
     fmt : Struct
@@ -21,38 +21,38 @@ class NBT_Numeric(NBT_Tag):
 
         return self.fmt.pack(self.value)
 
-class NBT_Byte(NBT_Numeric):
+class NBT_Byte(_NBT_Numeric):
     """Represent a single tag storing 1 byte."""
     default_type = TAG_BYTE
     fmt = Struct(">b")
 
 
-class NBT_Short(NBT_Numeric):
+class NBT_Short(_NBT_Numeric):
     """Represent a single tag storing 1 short."""
     id = TAG_SHORT
     fmt = Struct(">h")
 
 
-class NBT_Int(NBT_Numeric):
+class NBT_Int(_NBT_Numeric):
     """Represent a single tag storing 1 int."""
     id = TAG_INT
     fmt = Struct(">i")
     """Struct(">i"), 32-bits integer, big-endian"""
 
 
-class NBT_Long(NBT_Numeric):
+class NBT_Long(_NBT_Numeric):
     """Represent a single tag storing 1 long."""
     id = TAG_LONG
     fmt = Struct(">q")
 
 
-class NBT_Float(NBT_Numeric):
+class NBT_Float(_NBT_Numeric):
     """Represent a single tag storing 1 IEEE-754 floating point number."""
     id = TAG_FLOAT
     fmt = Struct(">f")
 
 
-class NBT_Double(NBT_Numeric):
+class NBT_Double(_NBT_Numeric):
     """Represent a single tag storing 1 IEEE-754 double precision floating
     point number."""
     id = TAG_DOUBLE
