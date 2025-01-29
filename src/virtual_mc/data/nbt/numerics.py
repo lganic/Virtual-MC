@@ -20,38 +20,38 @@ class NBT_Numeric(NBT_Tag):
 
         return self.fmt.pack(self.value)
 
-class TAG_Byte(NBT_Numeric):
+class NBT_Byte(NBT_Numeric):
     """Represent a single tag storing 1 byte."""
     default_type = TAG_BYTE
     fmt = Struct(">b")
 
 
-class TAG_Short(NBT_Numeric):
+class NBT_Short(NBT_Numeric):
     """Represent a single tag storing 1 short."""
     id = TAG_SHORT
     fmt = Struct(">h")
 
 
-class TAG_Int(NBT_Numeric):
+class NBT_Int(NBT_Numeric):
     """Represent a single tag storing 1 int."""
     id = TAG_INT
     fmt = Struct(">i")
     """Struct(">i"), 32-bits integer, big-endian"""
 
 
-class TAG_Long(NBT_Numeric):
+class NBT_Long(NBT_Numeric):
     """Represent a single tag storing 1 long."""
     id = TAG_LONG
     fmt = Struct(">q")
 
 
-class TAG_Float(NBT_Numeric):
+class NBT_Float(NBT_Numeric):
     """Represent a single tag storing 1 IEEE-754 floating point number."""
     id = TAG_FLOAT
     fmt = Struct(">f")
 
 
-class TAG_Double(NBT_Numeric):
+class NBT_Double(NBT_Numeric):
     """Represent a single tag storing 1 IEEE-754 double precision floating
     point number."""
     id = TAG_DOUBLE
