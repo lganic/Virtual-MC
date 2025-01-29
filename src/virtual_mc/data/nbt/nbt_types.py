@@ -60,7 +60,7 @@ class NBT_Double(NBT_Numeric):
 class NBT_End(NBT_Tag):
 
     def __init__(self):
-        super().__init__(TAG_END, '')
+        super().__init__(TAG_END, '', is_network=True) # The is_network here isn't part of the spec, just a hacky trick
     
     def payload(self):
         return bytes()
