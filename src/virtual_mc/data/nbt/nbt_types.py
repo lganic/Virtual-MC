@@ -101,6 +101,7 @@ class NBT_String(NBT_Tag):
 class _NBT_Length_Prefixed_Array(NBT_Tag):
 
     objects: List[NBT_Tag]
+    object_type: NBT_Tag
     default_type: int
 
     def __init__(self, name):
@@ -113,6 +114,10 @@ class _NBT_Length_Prefixed_Array(NBT_Tag):
         output_bytes = encode_int(array_length)
 
         for obj in self.objects:
+
+            if not isinstance(obj, self.object_type):
+                raise TypeError(f'An object int the array is not of expected type: {obj}')
+
             output_bytes += obj.payload() # Ignore name, and type
         
         return output_bytes
@@ -120,16 +125,19 @@ class _NBT_Length_Prefixed_Array(NBT_Tag):
 class NBT_ByteArray(_NBT_Length_Prefixed_Array):
 
     objects: List[NBT_Byte]
+    object_type: NBT_Byte
     default_type = TAG_BYTE_ARRAY
 
 class NBT_IntArray(_NBT_Length_Prefixed_Array):
 
     objects: List[NBT_Int]
+    object_type: NBT_Int
     default_type = TAG_INT_ARRAY
 
 class NBT_LongArray(_NBT_Length_Prefixed_Array):
 
     objects: List[NBT_Long]
+    object_type: NBT_Long
     default_type = TAG_LONG_ARRAY
 
 class NBT_List(_NBT_Length_Prefixed_Array):
