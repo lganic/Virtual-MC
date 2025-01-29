@@ -11,6 +11,18 @@ def _check_type_at_buffer_index(buffer, index, expected_type):
     if type_num != expected_type:
         raise TypeError(f'Decoded type: {type_num} is not expected object type: {expected_type} at index: {index}')
 
+def _read_name_at_buffer_index(buffer, index):
+
+    name_length = decode_short(buffer[index: index + 2])
+
+    name_bytes = buffer[index + 2: index + name_length + 2]
+
+    parsed = 2 + name_length
+
+    name = name_bytes.decode()
+
+    return (name, parsed)
+
 class _NBT_Numeric(NBT_Tag):
     """comparable to int with an intrinsic name"""
 
@@ -42,14 +54,11 @@ class _NBT_Numeric(NBT_Tag):
         name = ''
 
         if not no_name:
-            name_length = decode_short(buffer[index: index + 2])
 
-            name_bytes = buffer[index + 2: index + name_length + 2]
+            name, name_length = _read_name_at_buffer_index(buffer, index)
 
-            index += name_length + 2
-            parsed += 2
-        
-            name = name_bytes.decode()
+            index += name_length
+            parsed += name_length
 
         num_to_decode = self.fmt.size
 
