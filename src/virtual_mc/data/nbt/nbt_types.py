@@ -105,6 +105,12 @@ class NBT_End(NBT_Tag):
     
     def payload(self):
         return bytes()
+    
+    def parse_buffer(self, buffer, index, no_name = False, no_type = False):
+
+        _check_type_at_buffer_index(b)
+
+        return ('', None, 1)
 
 class NBT_Compound(NBT_Tag):
 
