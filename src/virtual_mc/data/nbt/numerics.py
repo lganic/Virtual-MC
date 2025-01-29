@@ -1,14 +1,4 @@
-"""
-Handle the NBT (Named Binary Tag) data format
-
-For more information about the NBT format:
-https://minecraft.wiki/w/NBT_format
-"""
-
-from struct import Struct, error as StructError
-from gzip import compress, decompress
-from collections.abc import MutableMapping, MutableSequence, Sequence
-import sys
+from struct import Struct
 from typing import Union
 from .tag import NBT_Tag
 from .type_ids import TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE
