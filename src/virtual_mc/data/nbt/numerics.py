@@ -1,7 +1,7 @@
 from struct import Struct
-from typing import Union
+from typing import Union, List
 from .tag import NBT_Tag
-from .type_ids import TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE
+from .type_ids import TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE, TAG_END, TAG_COMPOUND
 
 class NBT_Numeric(NBT_Tag):
     """comparable to int with an intrinsic name"""
@@ -56,3 +56,28 @@ class NBT_Double(NBT_Numeric):
     point number."""
     id = TAG_DOUBLE
     fmt = Struct(">d")
+
+class NBT_End(NBT_Tag):
+
+    def __init__(self):
+        super().__init__(TAG_END, '')
+    
+    def payload(self):
+        return bytes()
+
+class NBT_Compound(NBT_Tag):
+
+    def __init__(self, name, is_network = False):
+        super().__init__(NBT_Compound, name, is_network = is_network)
+
+        self.objects: List[NBT_Tag] = []
+    
+    def payload(self):
+
+        output_bytes = bytes()
+
+        for obj in self.objects + [NBT_End()]:
+
+            output_bytes += obj.to_bytes()
+        
+        return output_bytes
