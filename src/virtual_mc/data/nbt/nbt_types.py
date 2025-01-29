@@ -68,7 +68,7 @@ class NBT_End(NBT_Tag):
 class NBT_Compound(NBT_Tag):
 
     def __init__(self, name, is_network = False):
-        super().__init__(NBT_Compound, name, is_network = is_network)
+        super().__init__(TAG_COMPOUND, name, is_network = is_network)
 
         self.objects: List[NBT_Tag] = []
     
