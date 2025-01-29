@@ -113,7 +113,7 @@ class _NBT_Length_Prefixed_Array(NBT_Tag):
         output_bytes = encode_int(array_length)
 
         for obj in self.objects:
-            output_bytes += obj.payload() # Ignore name
+            output_bytes += obj.payload() # Ignore name, and type
         
         return output_bytes
 
