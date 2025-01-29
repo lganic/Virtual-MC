@@ -1,8 +1,8 @@
 from struct import Struct
 from typing import Union, List
 from .tag import NBT_Tag
-from .type_ids import TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE, TAG_END, TAG_COMPOUND, TAG_STRING
-from .nbt_util import encode_short
+from .type_ids import TAG_END, TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE, TAG_BYTE_ARRAY, TAG_STRING, TAG_LIST, TAG_COMPOUND, TAG_INT_ARRAY, TAG_LONG_ARRAY
+from .nbt_util import encode_short, encode_int
 
 class _NBT_Numeric(NBT_Tag):
     """comparable to int with an intrinsic name"""
@@ -97,3 +97,37 @@ class NBT_String(NBT_Tag):
         num_bytes = len(s_bytes)
 
         return encode_short(num_bytes) + s_bytes
+
+class _NBT_Length_Prefixed_Array(NBT_Tag):
+
+    objects: List[NBT_Tag]
+    default_type: int
+
+    def __init__(self, name):
+        super().__init__(self.default_type, name)
+
+    def payload(self):
+
+        array_length = len(self.objects)
+
+        output_bytes = encode_int(array_length)
+
+        for obj in self.objects:
+            output_bytes += obj.payload() # Ignore name
+        
+        return output_bytes
+
+class NBT_ByteArray(_NBT_Length_Prefixed_Array):
+
+    objects: List[NBT_Byte]
+    default_type = TAG_BYTE_ARRAY
+
+class NBT_IntArray(_NBT_Length_Prefixed_Array):
+
+    objects: List[NBT_Int]
+    default_type = TAG_INT_ARRAY
+
+class NBT_LongArray(_NBT_Length_Prefixed_Array):
+
+    objects: List[NBT_Long]
+    default_type = TAG_LONG_ARRAY
