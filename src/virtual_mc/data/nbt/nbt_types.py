@@ -29,33 +29,33 @@ class NBT_Byte(_NBT_Numeric):
 
 class NBT_Short(_NBT_Numeric):
     """Represent a single tag storing 1 short."""
-    id = TAG_SHORT
+    default_type = TAG_SHORT
     fmt = Struct(">h")
 
 
 class NBT_Int(_NBT_Numeric):
     """Represent a single tag storing 1 int."""
-    id = TAG_INT
+    default_type = TAG_INT
     fmt = Struct(">i")
     """Struct(">i"), 32-bits integer, big-endian"""
 
 
 class NBT_Long(_NBT_Numeric):
     """Represent a single tag storing 1 long."""
-    id = TAG_LONG
+    default_type = TAG_LONG
     fmt = Struct(">q")
 
 
 class NBT_Float(_NBT_Numeric):
     """Represent a single tag storing 1 IEEE-754 floating point number."""
-    id = TAG_FLOAT
+    default_type = TAG_FLOAT
     fmt = Struct(">f")
 
 
 class NBT_Double(_NBT_Numeric):
     """Represent a single tag storing 1 IEEE-754 double precision floating
     point number."""
-    id = TAG_DOUBLE
+    default_type = TAG_DOUBLE
     fmt = Struct(">d")
 
 class NBT_End(NBT_Tag):
