@@ -2,7 +2,7 @@ from struct import Struct
 from typing import Union, List
 from .tag import NBT_Tag
 from .type_ids import TAG_END, TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE, TAG_BYTE_ARRAY, TAG_STRING, TAG_LIST, TAG_COMPOUND, TAG_INT_ARRAY, TAG_LONG_ARRAY
-from .nbt_util import encode_short, encode_int
+from .nbt_util import encode_short, encode_int, decode_short, decode_int
 
 class _NBT_Numeric(NBT_Tag):
     """comparable to int with an intrinsic name"""
@@ -20,6 +20,41 @@ class _NBT_Numeric(NBT_Tag):
     def payload(self):
 
         return self.fmt.pack(self.value)
+
+    def parse_buffer(self, buffer: bytes, index: int, no_name = False, no_type = False):
+
+        parsed = 0
+
+        if not no_type:
+            type_num = buffer[index]
+
+            if type_num != self.default_type:
+                raise TypeError(f'Decoded type is not expected object type at index: {index}')
+
+            index += 1
+            parsed += 1
+        
+        name = ''
+
+        if not no_name:
+            name_length = decode_short(buffer[index: index + 2])
+
+            name_bytes = buffer[index + 2: index + name_length + 2]
+
+            index += name_length + 2
+            parsed += 2
+        
+            name = name_bytes.decode()
+
+        num_to_decode = self.fmt.size
+
+        value_bytes = buffer[index: index + num_to_decode]
+
+        result = self.fmt.unpack(value_bytes)
+
+        parsed += num_to_decode
+
+        return (name, result, parsed)
 
 class NBT_Byte(_NBT_Numeric):
     """Represent a single tag storing 1 byte."""
