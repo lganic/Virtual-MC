@@ -4,6 +4,13 @@ from .tag import NBT_Tag
 from .type_ids import TAG_END, TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE, TAG_BYTE_ARRAY, TAG_STRING, TAG_LIST, TAG_COMPOUND, TAG_INT_ARRAY, TAG_LONG_ARRAY
 from .nbt_util import encode_short, encode_int, decode_short, decode_int
 
+def _check_type_at_buffer_index(buffer, index, expected_type):
+
+    type_num = buffer[index]
+
+    if type_num != expected_type:
+        raise TypeError(f'Decoded type: {type_num} is not expected object type: {expected_type} at index: {index}')
+
 class _NBT_Numeric(NBT_Tag):
     """comparable to int with an intrinsic name"""
 
@@ -26,10 +33,8 @@ class _NBT_Numeric(NBT_Tag):
         parsed = 0
 
         if not no_type:
-            type_num = buffer[index]
 
-            if type_num != self.default_type:
-                raise TypeError(f'Decoded type is not expected object type at index: {index}')
+            _check_type_at_buffer_index(buffer, index, self.default_type)
 
             index += 1
             parsed += 1
