@@ -31,7 +31,7 @@ class NBT_Tag:
         
         return base + self.payload()
     
-    def parse_buffer(self, buffer: bytes, index: int, no_name: bool = False, no_type: bool = False) -> Tuple[Any, int]:
+    def parse_buffer(self, buffer: bytes, index: int, no_name: bool = False, no_type: bool = False) -> Tuple[str, Any, int]:
         """
         Parses an object from a bytes buffer starting at a specified index.
 
@@ -42,8 +42,9 @@ class NBT_Tag:
             no_type (bool, optional): Use if no type section is present
 
         Returns:
-            Tuple[Any, int]: A tuple where the first element is the parsed object and the second
-                            element is the number of bytes that were parsed.
+            Tuple[str, Any, int]: A tuple where the first element is the object name,
+                            the second is the parsed object
+                            the last element is the number of bytes that were parsed.
         """
 
         raise NotImplementedError('This object has not implemented this function')
