@@ -31,15 +31,15 @@ class NBT_Tag:
         
         return base + self.payload()
     
-    def parse_buffer(self, buffer: bytes, index: int, ignore_name: bool = False) -> Tuple[Any, int]:
+    def parse_buffer(self, buffer: bytes, index: int, no_name: bool = False, no_type: bool = False) -> Tuple[Any, int]:
         """
         Parses an object from a bytes buffer starting at a specified index.
 
         Args:
             buffer (bytes): The bytes buffer containing the data to parse.
             index (int): The starting index within the buffer from which to begin parsing.
-            ignore_name (bool, optional): If set to `True`, the parser will ignore the object's name
-                                        during parsing. Defaults to `False`.
+            no_name (bool, optional): Use if no name section is present
+            no_type (bool, optional): Use if no type section is present
 
         Returns:
             Tuple[Any, int]: A tuple where the first element is the parsed object and the second
