@@ -1,7 +1,8 @@
 from struct import Struct
 from typing import Union, List
 from .tag import NBT_Tag
-from .type_ids import TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE, TAG_END, TAG_COMPOUND
+from .type_ids import TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE, TAG_END, TAG_COMPOUND, TAG_STRING
+from .nbt_util import encode_short
 
 class NBT_Numeric(NBT_Tag):
     """comparable to int with an intrinsic name"""
@@ -81,3 +82,18 @@ class NBT_Compound(NBT_Tag):
             output_bytes += obj.to_bytes()
         
         return output_bytes
+
+class NBT_String(NBT_Tag):
+
+    def __init__(self, name: str, value: str):
+        super().__init__(TAG_STRING, name)
+
+        self.value = value
+    
+    def payload(self):
+        
+        s_bytes = self.value.encode()
+
+        num_bytes = len(s_bytes)
+
+        return encode_short(num_bytes) + s_bytes
