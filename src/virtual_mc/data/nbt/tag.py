@@ -52,6 +52,14 @@ class NBT_Tag:
         
         return base + self.payload()
     
+    def pretty_tree(self, indent=0):
+        raise NotImplementedError('pretty tree is not implemented for object type!')
+
+    def tag_info(self):
+        # Trying to mimic PyNBT debug outout format here:
+
+        return f"{self.__class__.__name__}('{self.name}'): "
+    
     @classmethod
     def parse_buffer(cls: Type['NBT_Tag'], buffer: bytes, index: int, no_name: bool = False, no_type: bool = False) -> Tuple[str, Any, int]:
         """
