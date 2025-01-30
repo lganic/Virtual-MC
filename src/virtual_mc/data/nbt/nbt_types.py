@@ -120,11 +120,11 @@ class NBT_Compound(NBT_Tag):
             object_type_value = buffer[index]
             object_type: NBT_Tag = TAG_TABLE[object_type_value]
 
-            if isinstance(object_type, NBT_End):
+            if object_type == NBT_End:
                 parsed_bytes += 1
                 break
 
-            _, object, size = object_type.parse_buffer()
+            _, object, size = object_type.parse_buffer(buffer, index)
 
             parsed_objects.append(object)
 
