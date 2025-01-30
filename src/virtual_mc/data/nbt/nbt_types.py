@@ -90,7 +90,24 @@ class NBT_End(NBT_Tag):
 
         return ('', cls(), 1)
 
-class NBT_Compound(NBT_Tag):
+class _NBT_Group(NBT_Tag):
+
+    objects: List[NBT_Tag]
+
+    def pretty_tree(self, indent=0):
+        """Return formated Unicode string of self, where iterable items are
+        recursively listed in detail."""
+        
+        output = ("\t" * indent) + self.tag_info() + str(len(self.objects))+ ' entries\n' + ("\t" * indent) + '{\n'
+
+        for item in self.objects:
+            output += item.pretty_tree(indent + 1)
+        
+        output += ("\t" * indent) + '}\n'
+
+        return output
+
+class NBT_Compound(_NBT_Group):
 
     default_type = TAG_COMPOUND
 
@@ -141,19 +158,6 @@ class NBT_Compound(NBT_Tag):
 
         return output_compound, parsed_bytes
 
-    def pretty_tree(self, indent=0):
-        """Return formated Unicode string of self, where iterable items are
-        recursively listed in detail."""
-        
-        output = ("\t" * indent) + self.tag_info() + str(len(self.objects))+ ' entries\n' + ("\t" * indent) + '{\n'
-
-        for item in self.objects:
-            output += item.pretty_tree(indent + 1)
-        
-        output += ("\t" * indent) + '}\n'
-
-        return output
-
 class NBT_String(NBT_Tag):
     
     default_type = TAG_STRING
@@ -188,9 +192,8 @@ class NBT_String(NBT_Tag):
         
         return ('\t' * indent) + self.tag_info() + self.value + '\n'
 
-class _NBT_Length_Prefixed_Array(NBT_Tag):
+class _NBT_Length_Prefixed_Array(_NBT_Group):
 
-    objects: List[NBT_Tag]
     object_type: NBT_Tag
 
     def __init__(self, name: str, objects: List[NBT_Tag] = list()):
@@ -237,19 +240,6 @@ class _NBT_Length_Prefixed_Array(NBT_Tag):
         output_array = cls(name, objects = output_objects)
 
         return output_array, parsed_bytes
-    
-    def pretty_tree(self, indent=0):
-        """Return formated Unicode string of self, where iterable items are
-        recursively listed in detail."""
-        
-        output = ("\t" * indent) + self.tag_info() + str(len(self.objects))+ ' entries\n' + ("\t" * indent) + '{\n'
-
-        for item in self.objects:
-            output += item.pretty_tree(indent + 1)
-        
-        output += ("\t" * indent) + '}\n'
-
-        return output
 
 class NBT_ByteArray(_NBT_Length_Prefixed_Array):
 
@@ -321,18 +311,5 @@ class NBT_List(_NBT_Length_Prefixed_Array):
         output_array = cls(name, object_type = object_type, objects = output_objects)
 
         return output_array, parsed_bytes
-
-    def pretty_tree(self, indent=0):
-        """Return formated Unicode string of self, where iterable items are
-        recursively listed in detail."""
-        
-        output = ("\t" * indent) + self.tag_info() + str(len(self.objects))+ ' entries\n' + ("\t" * indent) + '{\n'
-
-        for item in self.objects:
-            output += item.pretty_tree(indent + 1)
-        
-        output += ("\t" * indent) + '}\n'
-
-        return output
 
 TAG_TABLE = {TAG_END: NBT_End, TAG_END: NBT_End, TAG_BYTE: NBT_Byte, TAG_SHORT: NBT_Short, TAG_INT: NBT_Int, TAG_LONG: NBT_Long, TAG_FLOAT: NBT_Float, TAG_DOUBLE: NBT_Double, TAG_BYTE_ARRAY: NBT_ByteArray, TAG_STRING: NBT_String, TAG_LIST: NBT_List, TAG_COMPOUND: NBT_Compound, TAG_INT_ARRAY: NBT_IntArray, TAG_LONG_ARRAY: NBT_LongArray}
