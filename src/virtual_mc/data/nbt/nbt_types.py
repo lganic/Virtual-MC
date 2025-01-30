@@ -108,6 +108,7 @@ class NBT_Compound(NBT_Tag):
     def parse_payload(cls, name: str, buffer: bytes, index: int):
 
         parsed_objects = []
+        parsed_bytes = 0
 
         while True:
 
@@ -115,6 +116,7 @@ class NBT_Compound(NBT_Tag):
             object_type: NBT_Tag = TAG_TABLE[object_type_value]
 
             if isinstance(object_type, NBT_End):
+                parsed_bytes += 1
                 break
 
             _, object, size = object_type.parse_buffer()
@@ -122,6 +124,7 @@ class NBT_Compound(NBT_Tag):
             parsed_objects.append(object)
 
             index += size
+            parsed_bytes += size
         
         network = False
 
@@ -133,7 +136,7 @@ class NBT_Compound(NBT_Tag):
 
         output_compound.objects = parsed_objects
 
-        return output_compound
+        return output_compound, parsed_bytes
 
 class NBT_String(NBT_Tag):
     
