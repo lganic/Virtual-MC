@@ -98,7 +98,14 @@ class _NBT_Group(NBT_Tag):
         """Return formated Unicode string of self, where iterable items are
         recursively listed in detail."""
         
-        output = ("\t" * indent) + self.tag_info() + str(len(self.objects))+ ' entries\n' + ("\t" * indent) + '{\n'
+        if len(self.objects) == 0:
+            return ("\t" * indent) + self.tag_info() + '0 entries\n'
+        
+        if len(self.objects) == 1:
+            output = ("\t" * indent) + self.tag_info() + str(len(self.objects))+ ' entry\n' + ("\t" * indent) + '{\n'
+
+        else:
+            output = ("\t" * indent) + self.tag_info() + str(len(self.objects))+ ' entries\n' + ("\t" * indent) + '{\n'
 
         for item in self.objects:
             output += item.pretty_tree(indent + 1)
