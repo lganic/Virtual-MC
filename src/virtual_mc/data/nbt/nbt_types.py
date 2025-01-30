@@ -36,7 +36,7 @@ class _NBT_Numeric(NBT_Tag):
     def pretty_tree(self, indent=0):
         """Return formated Unicode string of self, where iterable items are
         recursively listed in detail."""
-        return ("\t" * indent) + self.tag_info() + '\n'
+        return ("\t" * indent) + self.tag_info() + str(self.value) + '\n'
 
 class NBT_Byte(_NBT_Numeric):
     """Represent a single tag storing 1 byte."""
@@ -145,7 +145,7 @@ class NBT_Compound(NBT_Tag):
         """Return formated Unicode string of self, where iterable items are
         recursively listed in detail."""
         
-        output = f'{("\t" * indent)}{self.tag_info()}{len(self.objects)} entries\n{("\t" * indent)}' + '{'
+        output = ("\t" * indent) + self.tag_info() + len(self.objects)+ ' entries\n' + ("\t" * indent) + '{'
 
         for item in self.objects:
             output += item.pretty_tree(indent + 1)
@@ -184,7 +184,7 @@ class NBT_String(NBT_Tag):
     
     def pretty_tree(self, indent=0):
         
-        return f"{('\t' * indent)}{self.tag_info()}'{self.value}'\n"
+        return ('\t' * indent) + self.tag_info() + self.value + '\n'
 
 class _NBT_Length_Prefixed_Array(NBT_Tag):
 
@@ -240,7 +240,7 @@ class _NBT_Length_Prefixed_Array(NBT_Tag):
         """Return formated Unicode string of self, where iterable items are
         recursively listed in detail."""
         
-        output = f'{("\t" * indent)}{self.tag_info()}{len(self.objects)} entries\n{("\t" * indent)}' + '{'
+        output = ("\t" * indent) + self.tag_info() + len(self.objects)+ ' entries\n' + ("\t" * indent) + '{'
 
         for item in self.objects:
             output += item.pretty_tree(indent + 1)
@@ -322,7 +322,7 @@ class NBT_List(_NBT_Length_Prefixed_Array):
         """Return formated Unicode string of self, where iterable items are
         recursively listed in detail."""
         
-        output = f'{("\t" * indent)}{self.tag_info()}{len(self.objects)} entries\n{("\t" * indent)}' + '{'
+        output = ("\t" * indent) + self.tag_info() + len(self.objects)+ ' entries\n' + ("\t" * indent) + '{'
 
         for item in self.objects:
             output += item.pretty_tree(indent + 1)
