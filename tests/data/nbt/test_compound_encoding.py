@@ -1,6 +1,7 @@
 import pytest
 import os
 from virtual_mc.data.nbt.nbt_types import NBT_Compound, NBT_String
+from virtual_mc.data.nbt.helpers import parse_compressed_file, parse_file
 import gzip
 
 
@@ -26,12 +27,13 @@ def test_hello_world_nbt():
 
     # Load hello world NBT
 
-    with open(os.path.join(os.path.dirname(__file__), 'hello_world.nbt') , 'rb') as f:
+    filepath = os.path.join(os.path.dirname(__file__), 'hello_world.nbt')
+    object = parse_file(filepath)
+
+    with open(filepath , 'rb') as f:
         contents = f.read()
     
     result = name, object, size = NBT_Compound.parse_buffer(contents, 0)
-
-    object: NBT_Compound
 
     assert object.pretty_tree() == "NBT_Compound('hello world'): 1 entry\n{\n\tNBT_String('name'): Bananrama\n}\n"
 
@@ -45,15 +47,13 @@ def test_bigtest_nbt():
 
     # Load hello world NBT
 
-    with open(os.path.join(os.path.dirname(__file__), 'bigtest.nbt') , 'rb') as f:
+    filepath = os.path.join(os.path.dirname(__file__), 'bigtest.nbt')
+    object = parse_compressed_file(filepath)
+
+    with open(filepath , 'rb') as f:
         contents = f.read()
 
     contents = gzip.decompress(contents)
-
-    result = name, object, size = NBT_Compound.parse_buffer(contents, 0)
-
-    object: NBT_Compound
-
     recoded = object.to_bytes()
 
     assert object.is_network == False
