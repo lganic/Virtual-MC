@@ -154,6 +154,19 @@ class NBT_String(NBT_Tag):
         num_bytes = len(s_bytes)
 
         return encode_short(num_bytes) + s_bytes
+    
+    @classmethod
+    def parse_payload(cls, name: str, buffer: bytes, index: int):
+
+        string_length = decode_short(buffer[index: index + 2])
+
+        string_bytes = buffer[index + 2: index + 2 + string_length]
+
+        string_value = string_bytes.decode()
+
+        output_obj = cls(name, string_value)
+
+        return output_obj, 2 + string_length
 
 class _NBT_Length_Prefixed_Array(NBT_Tag):
 
