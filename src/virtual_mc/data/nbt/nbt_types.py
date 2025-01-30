@@ -4,34 +4,14 @@ from .tag import NBT_Tag
 from .type_ids import TAG_END, TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE, TAG_BYTE_ARRAY, TAG_STRING, TAG_LIST, TAG_COMPOUND, TAG_INT_ARRAY, TAG_LONG_ARRAY
 from .nbt_util import encode_short, encode_int, decode_short, decode_int
 
-def _check_type_at_buffer_index(buffer, index, expected_type):
-
-    type_num = buffer[index]
-
-    if type_num != expected_type:
-        raise TypeError(f'Decoded type: {type_num} is not expected object type: {expected_type} at index: {index}')
-
-def _read_name_at_buffer_index(buffer, index):
-
-    name_length = decode_short(buffer[index: index + 2])
-
-    name_bytes = buffer[index + 2: index + name_length + 2]
-
-    parsed = 2 + name_length
-
-    name = name_bytes.decode()
-
-    return (name, parsed)
-
 class _NBT_Numeric(NBT_Tag):
     """comparable to int with an intrinsic name"""
 
     fmt : Struct
-    default_type : int
 
     value: Union[float, int]
 
-    def __init__(self, value, name):
+    def __init__(self, name, value):
         super().__init__(self.default_type, name)
 
         self.value = value
@@ -40,35 +20,18 @@ class _NBT_Numeric(NBT_Tag):
 
         return self.fmt.pack(self.value)
 
-    def parse_buffer(self, buffer: bytes, index: int, no_name = False, no_type = False):
+    @classmethod
+    def parse_payload(cls, name: str, buffer: bytes, index: int, no_name = False, no_type = False):
 
-        parsed = 0
-
-        if not no_type:
-
-            _check_type_at_buffer_index(buffer, index, self.default_type)
-
-            index += 1
-            parsed += 1
-        
-        name = ''
-
-        if not no_name:
-
-            name, name_length = _read_name_at_buffer_index(buffer, index)
-
-            index += name_length
-            parsed += name_length
-
-        num_to_decode = self.fmt.size
+        num_to_decode = cls.fmt.size
 
         value_bytes = buffer[index: index + num_to_decode]
 
-        result = self.fmt.unpack(value_bytes)
+        result = cls.fmt.unpack(value_bytes)
 
-        parsed += num_to_decode
+        ret_obj = cls(name, result)
 
-        return (name, result, parsed)
+        return (ret_obj, num_to_decode)
 
 class NBT_Byte(_NBT_Numeric):
     """Represent a single tag storing 1 byte."""
@@ -109,22 +72,25 @@ class NBT_Double(_NBT_Numeric):
 
 class NBT_End(NBT_Tag):
 
+    default_type = TAG_END
+
     def __init__(self):
         super().__init__(TAG_END, '', is_network=True) # The is_network here isn't part of the spec, just a hacky trick
     
     def payload(self):
         return bytes()
     
-    def parse_buffer(self, buffer, index, no_name = False, no_type = False):
+    @classmethod
+    def parse_buffer(cls, buffer, index, no_name = False, no_type = False):
 
-        _check_type_at_buffer_index(b)
-
-        return ('', None, 1)
+        return ('', cls(), 1)
 
 class NBT_Compound(NBT_Tag):
 
+    default_type = TAG_COMPOUND
+
     def __init__(self, name, is_network = False):
-        super().__init__(TAG_COMPOUND, name, is_network = is_network)
+        super().__init__(self.default_type, name, is_network = is_network)
 
         self.objects: List[NBT_Tag] = []
     
@@ -137,11 +103,44 @@ class NBT_Compound(NBT_Tag):
             output_bytes += obj.to_bytes()
         
         return output_bytes
+    
+    @classmethod
+    def parse_payload(cls, name: str, buffer: bytes, index: int):
+
+        parsed_objects = []
+
+        while True:
+
+            object_type_value = buffer[index]
+            object_type: NBT_Tag = TAG_TABLE[object_type_value]
+
+            if isinstance(object_type, NBT_End):
+                break
+
+            _, object, size = object_type.parse_buffer()
+
+            parsed_objects.append(object)
+
+            index += size
+        
+        network = False
+
+        if name == '':
+            # Probably a network compound
+            network = True
+
+        output_compound: NBT_Compound = cls(name, is_network = True)
+
+        output_compound.objects = parsed_objects
+
+        return output_compound
 
 class NBT_String(NBT_Tag):
+    
+    default_type = TAG_STRING
 
     def __init__(self, name: str, value: str):
-        super().__init__(TAG_STRING, name)
+        super().__init__(self.default_type, name)
 
         self.value = value
     
@@ -157,7 +156,6 @@ class _NBT_Length_Prefixed_Array(NBT_Tag):
 
     objects: List[NBT_Tag]
     object_type: NBT_Tag
-    default_type: int
 
     def __init__(self, name):
         super().__init__(self.default_type, name)
