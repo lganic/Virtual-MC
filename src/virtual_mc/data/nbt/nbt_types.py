@@ -259,13 +259,13 @@ class NBT_List(_NBT_Length_Prefixed_Array):
     @classmethod
     def parse_payload(cls, name: str, buffer: bytes, index: int):
 
-        # Find the number of objects in the array
-        length_bytes = buffer[index: index + 4]
-        index += 4
-
         # Find the object type contained in the array
         object_id_value = buffer[index]
         index += 1
+
+        # Find the number of objects in the array
+        length_bytes = buffer[index: index + 4]
+        index += 4
 
         object_type: Type[NBT_Tag] = TAG_TABLE[object_id_value]
 
