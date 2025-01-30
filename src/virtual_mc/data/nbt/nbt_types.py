@@ -145,7 +145,7 @@ class NBT_Compound(NBT_Tag):
         """Return formated Unicode string of self, where iterable items are
         recursively listed in detail."""
         
-        output = ("\t" * indent) + self.tag_info() + len(self.objects)+ ' entries\n' + ("\t" * indent) + '{'
+        output = ("\t" * indent) + self.tag_info() + str(len(self.objects))+ ' entries\n' + ("\t" * indent) + '{'
 
         for item in self.objects:
             output += item.pretty_tree(indent + 1)
@@ -240,7 +240,7 @@ class _NBT_Length_Prefixed_Array(NBT_Tag):
         """Return formated Unicode string of self, where iterable items are
         recursively listed in detail."""
         
-        output = ("\t" * indent) + self.tag_info() + len(self.objects)+ ' entries\n' + ("\t" * indent) + '{'
+        output = ("\t" * indent) + self.tag_info() + str(len(self.objects))+ ' entries\n' + ("\t" * indent) + '{'
 
         for item in self.objects:
             output += item.pretty_tree(indent + 1)
@@ -322,7 +322,7 @@ class NBT_List(_NBT_Length_Prefixed_Array):
         """Return formated Unicode string of self, where iterable items are
         recursively listed in detail."""
         
-        output = ("\t" * indent) + self.tag_info() + len(self.objects)+ ' entries\n' + ("\t" * indent) + '{'
+        output = ("\t" * indent) + self.tag_info() + str(len(self.objects))+ ' entries\n' + ("\t" * indent) + '{'
 
         for item in self.objects:
             output += item.pretty_tree(indent + 1)
