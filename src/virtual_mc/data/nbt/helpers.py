@@ -1,7 +1,7 @@
 import gzip
 from .nbt_types import NBT_Compound
 
-def parse_byte_string(buffer: bytes, is_network = False):
+def parse_byte_string(buffer: bytes, is_network = False) -> NBT_Compound:
 
     '''
     Parse a given byte string for NBT data
@@ -13,7 +13,7 @@ def parse_byte_string(buffer: bytes, is_network = False):
 
     return object
 
-def parse_compressed_byte_string(compressed_buffer: bytes, is_network = False):
+def parse_compressed_byte_string(compressed_buffer: bytes, is_network = False) -> NBT_Compound:
 
     '''
     Parse a given compressed byte string for NBT data
@@ -25,7 +25,7 @@ def parse_compressed_byte_string(compressed_buffer: bytes, is_network = False):
 
     return parse_byte_string(decompressed_content, is_network = is_network)
 
-def parse_file(file_path: str):
+def parse_file(file_path: str) -> NBT_Compound:
 
     '''
     Open and parse a NBT file which is not compressed
@@ -37,7 +37,7 @@ def parse_file(file_path: str):
 
     return parse_byte_string(byte_buffer)
 
-def parse_compressed_file(file_path: str):
+def parse_compressed_file(file_path: str) -> NBT_Compound:
 
     '''
     Open and parse a NBT file which is compressed
