@@ -1,5 +1,5 @@
 from struct import Struct
-from typing import Union, List
+from typing import Union, List, Type
 from .tag import NBT_Tag
 from .type_ids import TAG_END, TAG_BYTE, TAG_SHORT, TAG_INT, TAG_LONG, TAG_FLOAT, TAG_DOUBLE, TAG_BYTE_ARRAY, TAG_STRING, TAG_LIST, TAG_COMPOUND, TAG_INT_ARRAY, TAG_LONG_ARRAY
 from .nbt_util import encode_short, encode_int, decode_short, decode_int
@@ -190,6 +190,31 @@ class _NBT_Length_Prefixed_Array(NBT_Tag):
             output_bytes += obj.payload() # Ignore name, and type
         
         return output_bytes
+    
+    @classmethod
+    def parse_payload(cls, name: str, buffer: bytes, index: int):
+
+        # Find the number of objects in the array
+        length_bytes = buffer[index: index + 4]
+        index += 4
+
+        array_length = decode_int(length_bytes)
+
+        parsed_bytes = 4
+        output_objects = []
+
+        for _ in range(array_length):
+
+            obj_name, obj, size = cls.object_type.parse_buffer(buffer, index, no_name = True, no_type = True)
+
+            output_objects.append(obj)
+
+            index += size
+            parsed_bytes += size
+        
+        output_array = cls(name, objects = output_objects)
+
+        return output_array, parsed_bytes
 
 class NBT_ByteArray(_NBT_Length_Prefixed_Array):
 
@@ -213,11 +238,11 @@ class NBT_List(_NBT_Length_Prefixed_Array):
 
     default_type = TAG_LIST
 
-    def __init__(self, object_type, name):
+    def __init__(self, name, object_type, objects: List[NBT_Tag] = []):
 
         self.object_type = object_type
 
-        super().__init__(name)
+        super().__init__(name, objects = objects)
     
     def payload(self):
 
@@ -230,5 +255,36 @@ class NBT_List(_NBT_Length_Prefixed_Array):
             base = bytes([self.object_type])
 
         return base + super().payload()
+
+    @classmethod
+    def parse_payload(cls, name: str, buffer: bytes, index: int):
+
+        # Find the number of objects in the array
+        length_bytes = buffer[index: index + 4]
+        index += 4
+
+        # Find the object type contained in the array
+        object_id_value = buffer[index]
+        index += 1
+
+        object_type: Type[NBT_Tag] = TAG_TABLE[object_id_value]
+
+        array_length = decode_int(length_bytes)
+
+        parsed_bytes = 5
+        output_objects = []
+
+        for _ in range(array_length):
+
+            obj_name, obj, size = object_type.parse_buffer(buffer, index, no_name = True, no_type = True)
+
+            output_objects.append(obj)
+
+            index += size
+            parsed_bytes += size
+        
+        output_array = cls(name, object_type = object_type, objects = output_objects)
+
+        return output_array, parsed_bytes
 
 TAG_TABLE = {TAG_END: NBT_End, TAG_END: NBT_End, TAG_BYTE: NBT_Byte, TAG_SHORT: NBT_Short, TAG_INT: NBT_Int, TAG_LONG: NBT_Long, TAG_FLOAT: NBT_Float, TAG_DOUBLE: NBT_Double, TAG_BYTE_ARRAY: NBT_ByteArray, TAG_STRING: NBT_String, TAG_LIST: NBT_List, TAG_COMPOUND: NBT_Compound, TAG_INT_ARRAY: NBT_IntArray, TAG_LONG_ARRAY: NBT_LongArray}
