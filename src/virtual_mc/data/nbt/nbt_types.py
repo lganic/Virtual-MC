@@ -27,7 +27,7 @@ class _NBT_Numeric(NBT_Tag):
 
         value_bytes = buffer[index: index + num_to_decode]
 
-        result = cls.fmt.unpack(value_bytes)
+        result = cls.fmt.unpack(value_bytes)[0]
 
         ret_obj = cls(name, result)
 
@@ -272,7 +272,7 @@ class NBT_List(_NBT_Length_Prefixed_Array):
 
     def __init__(self, name, object_type, objects: List[NBT_Tag] = []):
 
-        self.object_type = object_type
+        self.object_type: Type[NBT_Tag] = object_type
 
         super().__init__(name, objects = objects)
     
@@ -284,7 +284,7 @@ class NBT_List(_NBT_Length_Prefixed_Array):
         
         else:
 
-            base = bytes([self.object_type])
+            base = bytes([self.object_type.default_type])
 
         return base + super().payload()
 
