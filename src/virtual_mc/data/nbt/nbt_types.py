@@ -201,7 +201,7 @@ class NBT_String(NBT_Tag):
 
 class _NBT_Length_Prefixed_Array(_NBT_Group):
 
-    object_type: NBT_Tag
+    object_type = NBT_Tag
 
     def __init__(self, name: str, objects: List[NBT_Tag] = list()):
         super().__init__(self.default_type, name)
@@ -251,19 +251,19 @@ class _NBT_Length_Prefixed_Array(_NBT_Group):
 class NBT_ByteArray(_NBT_Length_Prefixed_Array):
 
     objects: List[NBT_Byte]
-    object_type: NBT_Byte
+    object_type = NBT_Byte
     default_type = TAG_BYTE_ARRAY
 
 class NBT_IntArray(_NBT_Length_Prefixed_Array):
 
     objects: List[NBT_Int]
-    object_type: NBT_Int
+    object_type = NBT_Int
     default_type = TAG_INT_ARRAY
 
 class NBT_LongArray(_NBT_Length_Prefixed_Array):
 
     objects: List[NBT_Long]
-    object_type: NBT_Long
+    object_type = NBT_Long
     default_type = TAG_LONG_ARRAY
 
 class NBT_List(_NBT_Length_Prefixed_Array):
