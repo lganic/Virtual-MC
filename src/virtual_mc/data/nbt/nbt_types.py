@@ -89,10 +89,10 @@ class NBT_Compound(NBT_Tag):
 
     default_type = TAG_COMPOUND
 
-    def __init__(self, name, is_network = False):
+    def __init__(self, name, is_network = False, objects: List[NBT_Tag] = list()):
         super().__init__(self.default_type, name, is_network = is_network)
 
-        self.objects: List[NBT_Tag] = []
+        self.objects: List[NBT_Tag] = objects
     
     def payload(self):
 
@@ -132,9 +132,7 @@ class NBT_Compound(NBT_Tag):
             # Probably a network compound
             network = True
 
-        output_compound: NBT_Compound = cls(name, is_network = True)
-
-        output_compound.objects = parsed_objects
+        output_compound: NBT_Compound = cls(name, is_network = True, objects = parsed_objects)
 
         return output_compound, parsed_bytes
 
@@ -173,8 +171,10 @@ class _NBT_Length_Prefixed_Array(NBT_Tag):
     objects: List[NBT_Tag]
     object_type: NBT_Tag
 
-    def __init__(self, name):
+    def __init__(self, name: str, objects: List[NBT_Tag] = list()):
         super().__init__(self.default_type, name)
+
+        self.objects = objects
 
     def payload(self):
 
