@@ -161,7 +161,7 @@ class NBT_Compound(_NBT_Group):
             # Probably a network compound
             network = True
 
-        output_compound: NBT_Compound = cls(name, is_network = True, objects = parsed_objects)
+        output_compound: NBT_Compound = cls(name, is_network = network, objects = parsed_objects)
 
         return output_compound, parsed_bytes
 
