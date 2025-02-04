@@ -71,11 +71,11 @@ def ensure_up_to_date(server_jar_path):
 
     latest_version = get_most_recent_version()
 
-    print(f'Server is currently running: {current_version}, Latest version is: {latest_version}')
+    print(f'Cached version: {current_version}, Latest version is: {latest_version}')
 
     if current_version != latest_version:
         # server is out of date, update!
-        print('Updating server...')
+        print('Downloading most recent server jar...')
 
         download_url = get_server_download(latest_version)
 
