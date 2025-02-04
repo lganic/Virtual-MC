@@ -65,3 +65,16 @@ class BitSet(Byteable_Object):
             index_state = value == '1'
 
             self.bits[i] = index_state
+
+    def __setitem__(self, index, value):
+        if isinstance(index, slice):  # Handle slicing
+            if len(value) != (index.stop - index.start):
+                raise ValueError("Slice length and values length must match")
+            for i, val in zip(range(index.start, index.stop), value):
+                self.bits[i] = val == '1'
+        else:  # Handle single index
+
+            if len(value) != 1:
+                raise ValueError('Invalid value size for single index set')
+
+            self.bits[index] = value == '1'
