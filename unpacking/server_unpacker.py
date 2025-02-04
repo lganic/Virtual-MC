@@ -111,6 +111,8 @@ def cleanup():
 
         print(f'Cleaning up directory: {path}')
         shutil.rmtree(os.path.join(build_location, path))
-
+    
+    os.remove(server_abspath)
+    
 if __name__ == '__main__':
     cleanup()

@@ -14,10 +14,10 @@ def build_id_lookup():
 
     output_data = {}
 
+    print('Building ID lookup table...')
+
     for block_name in block_data:
         
-        print(f'Loading block data: {block_name}')
-
         for block_state in block_data[block_name].get('states', []):
 
             properties = block_state.get('properties', {})
