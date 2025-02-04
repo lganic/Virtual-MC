@@ -3,6 +3,8 @@ import zipfile
 import json
 import os
 import shutil
+import subprocess
+
 
 # URL of the JSON version manifest
 url = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
@@ -17,10 +19,10 @@ def get_json_from_url(url):
     else:
         raise ValueError(f"Failed to retrieve data. Status code: {response.status_code}")
 
-def get_most_recent_version():
+def get_most_recent_version() -> str:
     data = get_json_from_url(url)
 
-    latest_version = data.get('latest', {}).get('release', {})
+    latest_version = data.get('latest', {}).get('release', '')
 
     return latest_version
 
@@ -99,7 +101,13 @@ def unpack_server():
 
     ensure_up_to_date(server_abspath)
 
-    os.system(f'java -DbundlerMainClass="net.minecraft.data.Main" -jar {server_abspath} --all')
+    output_path = os.path.dirname(server_abspath)
+
+    subprocess.run(
+        ['java', '-DbundlerMainClass=net.minecraft.data.Main', '-jar', server_abspath, '--all'],
+        cwd=output_path
+    )
+
 
 def cleanup():
 

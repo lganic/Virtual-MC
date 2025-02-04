@@ -1,12 +1,16 @@
 import json
+import os
 
 BLOCKS_RELPATH = 'generated/reports/blocks.json'
+
+DATA_PATH = os.path.join(os.path.dirname(__file__), '../../../data')
+BLOCKS_PATH = os.path.join(os.path.dirname(__file__), BLOCKS_RELPATH)
 
 def build_id_lookup():
 
     # Load raw blocks json
 
-    with open(BLOCKS_RELPATH, 'r') as blocks_json:
+    with open(BLOCKS_PATH, 'r') as blocks_json:
 
         block_data = json.load(blocks_json)
     
@@ -35,11 +39,11 @@ def build_id_lookup():
                 basic_block_ids[block_name] = state_id
     
     print('Writing to id_to_block.json...')
-    with open('../data/id_to_block.json', 'w') as output_file:
+    with open(os.path.join(DATA_PATH, 'id_to_block.json'), 'w') as output_file:
         json.dump(output_data, output_file)
 
     print('Writing to basic_block_to_id.json...')
-    with open('../data/basic_block_to_id.json', 'w') as output_file:
+    with open(os.path.join(DATA_PATH, 'basic_block_to_id.json'), 'w') as output_file:
         json.dump(basic_block_ids, output_file)
 
 if __name__ == '__main__':
