@@ -1,10 +1,14 @@
 from .generic import Byteable_Object
 
-class Boolean(Byteable_Object, bool):
+class Boolean(Byteable_Object):
+
+    def __init__(self, state):
+
+        self.state = state
 
     def to_bytes(self):
 
-        if bool(self):
+        if self.state:
             return bytes([1])
         
         return bytes([0])
