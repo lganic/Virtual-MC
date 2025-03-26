@@ -1,10 +1,8 @@
-from typing import Union, TypeAlias
+from typing import Union
 from ..exceptions import check_range
 from .c2 import convert_to_2s_complement
 
-Number: TypeAlias = Union[float, int]
-
-def convert_position_to_long(x: Number, y: Number, z:Number) -> int:
+def convert_position_to_long(x: Union[float, int], y: Union[float, int], z:Union[float, int]) -> int:
 
     # Round out fields to int
     x = round(x)
