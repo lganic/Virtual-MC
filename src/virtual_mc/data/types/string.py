@@ -1,5 +1,5 @@
 from .generic import Byteable_Object
-from ..var_int import write_var_int
+from ..varint import write_var_int_bytes
 
 class String(Byteable_Object, str):
 
@@ -7,4 +7,4 @@ class String(Byteable_Object, str):
         
         encoded_string = str(self).encode('utf-8')
 
-        return write_var_int(len(encoded_string)) + encoded_string
+        return write_var_int_bytes(len(encoded_string)) + encoded_string

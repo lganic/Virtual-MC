@@ -1,7 +1,7 @@
 from .generic import Byteable_Object
 from .numbers import Long
 from .array import Array
-from ..var_int import write_var_int
+from ..varint import write_var_int_bytes
 
 # NOTE : There are a bunch of assumptions I am making here because the doc is a little unclear on the specifics of ordering, and if the encoded longs should have 2s complement. 
 # So do be warned, these might not work right now! I'm going to revisit these later once I've done a little more research. 
@@ -43,7 +43,7 @@ class BitSet(Byteable_Object):
 
         print(output_array.to_bytes())
 
-        return write_var_int(num_longs) + output_array.to_bytes()
+        return write_var_int_bytes(num_longs) + output_array.to_bytes()
     
     def set(self, index):
 

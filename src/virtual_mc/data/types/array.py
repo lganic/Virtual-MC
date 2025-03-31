@@ -1,7 +1,7 @@
 from typing import List
 
 from .generic import Byteable_Object
-from ..var_int import write_var_int
+from ..varint import write_var_int_bytes
 
 class Array(Byteable_Object):
 
@@ -34,6 +34,6 @@ class PrefixedArray(Array):
         base_output = super().to_bytes()
 
         # Add varint length to packet
-        length_varint = write_var_int(len(base_output))
+        length_varint = write_var_int_bytes(len(base_output))
 
         return length_varint + base_output

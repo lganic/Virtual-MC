@@ -1,4 +1,5 @@
 from . import nbt
+from . import types
 
-from . import var_int
 from . import c2
+from . import varint

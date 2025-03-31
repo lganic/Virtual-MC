@@ -1,7 +1,7 @@
 import struct
 from .generic import Byteable_Object
 from ...exceptions import check_range
-from ..var_int import write_var_int
+from ..varint import write_var_int_bytes
 
 class Number(Byteable_Object):
 
@@ -31,7 +31,7 @@ class VarInt(Byteable_Object, int):
     
     def to_bytes(self):
         
-        return write_var_int(int(self))
+        return write_var_int_bytes(int(self))
 
 class Float(Byteable_Object, float):
 

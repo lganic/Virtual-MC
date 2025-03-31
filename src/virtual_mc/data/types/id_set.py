@@ -1,7 +1,7 @@
 from .generic import Byteable_Object
 from .string import String
 from .array import Array
-from ..var_int import write_var_int
+from ..varint import write_var_int_bytes
 from .numbers import VarInt
 
 class IdSet(Byteable_Object):
@@ -14,7 +14,7 @@ class IdSet(Byteable_Object):
     
     def to_bytes(self):
         
-        type_bytes = write_var_int(self.type)
+        type_bytes = write_var_int_bytes(self.type)
 
         if self.type == 0:
 

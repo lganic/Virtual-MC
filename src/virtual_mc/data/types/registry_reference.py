@@ -1,6 +1,6 @@
 from typing import Optional
 from .generic import Byteable_Object
-from ..var_int import write_var_int
+from ..varint import write_var_int_bytes
 
 class RegistryReference(Byteable_Object):
     
@@ -38,4 +38,4 @@ class RegistryReference(Byteable_Object):
 
             return bytes([0]) + self.value.to_bytes()
         
-        return write_var_int(self.id)
+        return write_var_int_bytes(self.id)

@@ -1,47 +1,48 @@
 import pytest
-from virtual_mc.data.var_int import write_var_int
+from virtual_mc.data.varint import write_var_int_bytes, write_var_long_bytes
+
 
 def test_write_var_int_single_byte():
     # Single-byte VarInt (0 -> 0x00)
-    assert write_var_int(0, is_long=False) == bytes([0x00])
+    assert write_var_int_bytes(0) == bytes([0x00])
 
     # Single-byte VarInt (127 -> 0x7F, largest single-byte VarInt)
-    assert write_var_int(127, is_long=False) == bytes([0x7F])
+    assert write_var_int_bytes(127) == bytes([0x7F])
 
 def test_write_var_int_two_bytes():
     # Two-byte VarInt (128 -> 0x80 0x01)
-    assert write_var_int(128, is_long=False) == bytes([0x80, 0x01])
+    assert write_var_int_bytes(128) == bytes([0x80, 0x01])
 
     # Two-byte VarInt (255 -> 0xFF 0x01)
-    assert write_var_int(255, is_long=False) == bytes([0xFF, 0x01])
+    assert write_var_int_bytes(255) == bytes([0xFF, 0x01])
 
 def test_write_var_int_three_bytes():
     # Three-byte VarInt (16384 -> 0x80 0x80 0x01)
-    assert write_var_int(16384, is_long=False) == bytes([0x80, 0x80, 0x01])
+    assert write_var_int_bytes(16384) == bytes([0x80, 0x80, 0x01])
 
     # Three-byte VarInt (2097151 -> 0xFF 0xFF 0x7F, max 3-byte value)
-    assert write_var_int(2097151, is_long=False) == bytes([0xFF, 0xFF, 0x7F])
+    assert write_var_int_bytes(2097151) == bytes([0xFF, 0xFF, 0x7F])
 
 def test_write_var_int_four_bytes():
     # Four-byte VarInt (2097152 -> 0x80 0x80 0x80 0x01)
-    assert write_var_int(2097152, is_long=False) == bytes([0x80, 0x80, 0x80, 0x01])
+    assert write_var_int_bytes(2097152) == bytes([0x80, 0x80, 0x80, 0x01])
 
     # Four-byte VarInt (268435455 -> 0xFF 0xFF 0xFF 0x7F, max 4-byte value)
-    assert write_var_int(268435455, is_long=False) == bytes([0xFF, 0xFF, 0xFF, 0x7F])
+    assert write_var_int_bytes(268435455) == bytes([0xFF, 0xFF, 0xFF, 0x7F])
 
 def test_write_var_int_too_big():
     # Test for VarInt that exceeds 32 bits
-    with pytest.raises(ValueError):
-        write_var_int(2**35, is_long=False)
+    with pytest.raises(TypeError):
+        write_var_int_bytes(2**35)
 
     # Test for VarLong that exceeds 64 bits
-    with pytest.raises(ValueError):
-        write_var_int(2**70, is_long=True)
+    with pytest.raises(TypeError):
+        write_var_long_bytes(2**70)
 
 def test_write_var_int_invalid_type():
     # Test for invalid input type
     with pytest.raises(TypeError):
-        write_var_int("not an int")
+        write_var_int_bytes("not an int")
 
 @pytest.mark.parametrize("value, hex_bytes, decimal_bytes, is_long", [
     (0, bytes([0x00]), [0], False),
@@ -59,4 +60,9 @@ def test_write_var_int_invalid_type():
 ])
 def test_var_int(value, hex_bytes, decimal_bytes, is_long):
     # Test write_var_int
-    assert write_var_int(value, is_long=is_long) == hex_bytes
+
+
+    if is_long:
+        assert write_var_long_bytes(value) == hex_bytes
+    else:
+        assert write_var_int_bytes(value) == hex_bytes
