@@ -59,7 +59,7 @@ py::bytes compress_chunk(pybind11::array_t<int, 16> input_array)
     int palette_index = 0;
 
     // Generate the lookup table and count unique elements
-    for (int i = 0; i < buf.size; ++i)
+    for (int i = 0; i < buf.size; i++)
     {
         int block_id = ptr[i];
         if (block_to_palette.find(block_id) == block_to_palette.end())
