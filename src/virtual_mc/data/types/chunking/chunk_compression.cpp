@@ -11,8 +11,17 @@
 #include "../../varint/varint.cpp"
 
 namespace py = pybind11;
-constexpr int SIZE = 16;
-constexpr int DIRECT_BPE_BLOCKS = 15;
+
+constexpr int CHUNK_SIZE = 16;
+constexpr int BIOME_SIZE = 4;
+
+constexpr int BIOME_BPE_MIN_RANGE = 1;
+constexpr int BIOME_BPE_MAX_RANGE = 3;
+constexpr int BIOME_DIRECT_BPE = 6;
+
+constexpr int CHUNK_BPE_MIN_RANGE = 4;
+constexpr int CHUNK_BPE_MAX_RANGE = 8;
+constexpr int CHUNK_DIRECT_BPE = 15;
 
 static uint64_t fast_ceil_log_2(uint64_t value)
 {
@@ -42,15 +51,15 @@ std::string varint_string(int value){
     return varint_str;
 }
 
-py::bytes compress_chunk(pybind11::array_t<int, 16> input_array)
+std::string paletted_container(py::array_t<int, 16> input_array, int size, int lower_bpe_range, int upper_bpe_range, int max_bpe)
 {
     // Parse input ndarray buffer
     auto buf = input_array.request();
 
     // Check sizing
-    if (buf.ndim != 3 || buf.shape[0] != SIZE || buf.shape[1] != SIZE || buf.shape[2] != SIZE)
+    if (buf.ndim != 3 || buf.shape[0] != size || buf.shape[1] != size || buf.shape[2] != size)
     {
-        throw std::runtime_error("Input array must be a 16x16x16 integer array");
+        throw std::runtime_error("Input array did not match the expected size");
     }
 
     // Initialize the pallette map
@@ -74,12 +83,12 @@ py::bytes compress_chunk(pybind11::array_t<int, 16> input_array)
 
     // This is the single, dumbest, most moronic, stupid decision ever made by mojang.
     // There is no justifiable reason for the nonsense that is contained in these if statements.
-    if (bits_per_entry > 0 && bits_per_entry < 4){
-        bits_per_entry = 4; // WHY
+    if (bits_per_entry > 0 && bits_per_entry < lower_bpe_range){
+        bits_per_entry = lower_bpe_range; // WHY
     }
 
-    if (bits_per_entry > 8){
-        bits_per_entry = 15; // WHY
+    if (bits_per_entry > upper_bpe_range){
+        bits_per_entry = max_bpe; // WHY
     }
 
     // Initialize the output string by creating an output string containing the bits per entry byte. 
@@ -96,11 +105,11 @@ py::bytes compress_chunk(pybind11::array_t<int, 16> input_array)
 
         output_string.append(varint_string(0)); // Data array length (always zero in this case)
 
-        return py::bytes(output_string);
+        return output_string;
         // No data array is required, since the value is inferred from the pallette
     }
 
-    if (bits_per_entry < DIRECT_BPE_BLOCKS){
+    if (bits_per_entry < max_bpe){
         // bit per entry is less than the direct flag, we need to encode the pallette. 
 
         // Build reverse palette: index -> block_id
@@ -185,5 +194,15 @@ py::bytes compress_chunk(pybind11::array_t<int, 16> input_array)
 
     output_string.append(compressed_bytes);
 
-    return py::bytes(output_string);
+    return output_string;
+}
+
+py::bytes compress_chunk(py::array_t<int, 16> block_ids, py::array_t<int, 16> biome_ids){
+    
+    std::string chunk_container = paletted_container(block_ids, CHUNK_SIZE, CHUNK_BPE_MIN_RANGE, CHUNK_BPE_MAX_RANGE, CHUNK_DIRECT_BPE);
+    std::string biome_container = paletted_container(biome_ids, BIOME_SIZE, BIOME_BPE_MIN_RANGE, BIOME_BPE_MAX_RANGE, BIOME_DIRECT_BPE);
+
+    chunk_container.append(biome_container);
+
+    return py::bytes(chunk_container);
 }
