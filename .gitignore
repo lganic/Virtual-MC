@@ -108,4 +108,4 @@ ENV/
 .vscode/
 .idea/
 
-unpacking/server.jar
+src/virtual_mc/unpacking/server.jar
