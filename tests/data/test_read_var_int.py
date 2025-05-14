@@ -1,5 +1,5 @@
 import pytest
-from virtual_mc.data.varint import read_var_int_bytes, read_var_long_bytes
+from virtual_mc.data.varint import read_var_int_bytes, read_var_long_bytes, get_length_var_int
 
 def test_read_var_int_single_byte():
     # Single-byte VarInt (0x00 -> 0)
@@ -57,6 +57,14 @@ def test_read_var_int_too_big():
     data = bytes([0xFF] * 5)
     with pytest.raises(OverflowError):
         read_var_int_bytes(data)
+
+def test_var_int_length_check():
+    data = bytes([0xFF, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF, 0xFF])
+    assert get_length_var_int(data) == 4
+
+def test_var_int_length_check():
+    data = bytes([0x10, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF, 0xFF])
+    assert get_length_var_int(data) == 1
 
 @pytest.mark.parametrize("value, hex_bytes, decimal_bytes, is_long", [
     (0, bytes([0x00]), [0], False),
