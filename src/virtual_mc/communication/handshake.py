@@ -28,7 +28,7 @@ def parse_handshake(bytes):
 
     next_state = bytes[0] # This is technically a varint, but the values are never big enough to need more than 1 byte
 
-    if next_state > 3:
+    if next_state == 0 or next_state > 3:
         raise ValueError(f"Next state is invalid. Current accepted types are: Status(1), Login(2), Transfer(3). Got a value of: {next_state}")
 
     return protocol_version, server_address, server_port, next_state
