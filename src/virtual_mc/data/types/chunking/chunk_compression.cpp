@@ -51,6 +51,24 @@ std::string varint_string(int value){
     return varint_str;
 }
 
+int non_air_count(py::array_t<int, 16> input_array){
+    // Parse input ndarray buffer
+    auto buf = input_array.request();
+    auto ptr = static_cast<int *>(buf.ptr);
+
+    int count = 0;
+
+    for (int i = 0; i < buf.size; i++){
+        int block_id = ptr[i];
+
+        if (block_id != 0){
+            // Not an air block
+            count += 1;
+        }
+    }
+    return count;
+}
+
 std::string paletted_container(py::array_t<int, 16> input_array, int size, int lower_bpe_range, int upper_bpe_range, int max_bpe)
 {
     // Parse input ndarray buffer
@@ -202,7 +220,16 @@ py::bytes compress_chunk(py::array_t<int, 16> block_ids, py::array_t<int, 16> bi
     std::string chunk_container = paletted_container(block_ids, CHUNK_SIZE, CHUNK_BPE_MIN_RANGE, CHUNK_BPE_MAX_RANGE, CHUNK_DIRECT_BPE);
     std::string biome_container = paletted_container(biome_ids, BIOME_SIZE, BIOME_BPE_MIN_RANGE, BIOME_BPE_MAX_RANGE, BIOME_DIRECT_BPE);
 
-    chunk_container.append(biome_container);
+    int block_count = non_air_count(block_ids);
 
-    return py::bytes(chunk_container);
+    // Initialize the output string by creating an output string containing the block count as a short
+    uint16_t block_count_short = static_cast<uint16_t>(block_count);
+    std::string output_string;
+    output_string.push_back(static_cast<char>((block_count_short >> 8) & 0xFF)); // high byte
+    output_string.push_back(static_cast<char>(block_count_short & 0xFF));        // low byte
+
+    output_string.append(chunk_container);
+    output_string.append(biome_container);
+
+    return py::bytes(output_string);
 }
