@@ -40,4 +40,7 @@ PYBIND11_MODULE(varint, m) {
     m.def("write_var_long_bytes", [](int64_t value) {
         return vec_to_bytes(write_var_long(value));
     });
+    m.def("get_length_var_int", [](py::bytes b){
+        return get_length_var_int(bytes_to_vec(b));
+    });
 }

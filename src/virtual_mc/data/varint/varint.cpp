@@ -6,6 +6,18 @@ constexpr uint8_t CONTINUE_BIT = 0x80;
 constexpr uint32_t INT_SIGN_FLAG = 0x80000000;
 constexpr uint64_t SIGNAL_FLAG = 0xFFFFFFFFFFFFFF80;
 
+int32_t get_length_var_int(const std::vector<uint8_t>& data){
+
+    int32_t count = 1;
+
+    for (uint8_t byte : data) {
+        if ((byte & CONTINUE_BIT) == 0) break;
+        count += 1;
+    }
+
+    return count;
+}
+
 int32_t read_var_int(const std::vector<uint8_t>& data) {
     uint32_t value = 0;
     int shift = 0;
