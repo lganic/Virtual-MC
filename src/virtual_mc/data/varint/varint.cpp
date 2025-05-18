@@ -11,11 +11,11 @@ int32_t get_length_var_int(const std::vector<uint8_t>& data){
     int32_t count = 1;
 
     for (uint8_t byte : data) {
-        if ((byte & CONTINUE_BIT) == 0) break;
+        if ((byte & CONTINUE_BIT) == 0) return count;
         count += 1;
     }
 
-    return count;
+    return -1;
 }
 
 int32_t read_var_int(const std::vector<uint8_t>& data) {

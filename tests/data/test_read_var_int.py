@@ -66,6 +66,10 @@ def test_var_int_length_check():
     data = bytes([0x10, 0xFF, 0xFF, 0x7F, 0xFF, 0xFF, 0xFF, 0xFF])
     assert get_length_var_int(data) == 1
 
+def test_var_int_not_completed():
+    data = bytes([0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF])
+    assert get_length_var_int(data) == -1
+
 @pytest.mark.parametrize("value, hex_bytes, decimal_bytes, is_long", [
     (0, bytes([0x00]), [0], False),
     (1, bytes([0x01]), [1], False),
