@@ -11,6 +11,9 @@ LOGIN = 2
 TRANSFER = 3
 
 def parse_handshake(bytes):
+    '''
+    Return the protocol version, server address, server port, and next state
+    '''
 
     assert bytes[0] == 0
     bytes = bytes[1:]
@@ -25,6 +28,9 @@ def parse_handshake(bytes):
     server_port = int.from_bytes(bytes[:2], byteorder='little')
 
     bytes = bytes[2:]
+
+    print(len(bytes))
+    assert len(bytes) == 1
 
     next_state = bytes[0] # This is technically a varint, but the values are never big enough to need more than 1 byte
 
