@@ -1,5 +1,5 @@
 
-from .varint import read_var_int_bytes, get_length_var_int
+from ..data.varint import read_var_int_bytes, get_length_var_int
 
 def fetch_and_read_varint(bytes):
     varint_length = get_length_var_int(bytes)
