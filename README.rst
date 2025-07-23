@@ -22,16 +22,12 @@ Creates a virtual minecraft server that can be controlled programmatically.
 * Free software: MIT license
 * Documentation: https://virtual-mc.readthedocs.io.
 
+Testing what this looks like:
 
-Features
---------
+<a href="https://github.com/lganic/Virtual-MC/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=lganic/Virtual-MC" />
+</a>
 
-* TODO
+Made with [contrib.rocks](https://contrib.rocks).
 
-Credits
--------
-
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+Ignore, unless you wanna add yourself to this list!
