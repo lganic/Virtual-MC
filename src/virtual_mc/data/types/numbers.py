@@ -37,3 +37,8 @@ class Float(Byteable_Object, float):
 
     def to_bytes(self):
         return struct.pack('f', float(self))
+    
+class Double(Byteable_Object, float):
+
+    def to_bytes(self):
+        return struct.pack('d', float(self))
