@@ -18,7 +18,7 @@ class SoundEvent(Byteable_Object):
         if not isinstance(self.fixed_range, float):
             raise TypeError('Float needs to be specified for fixed range')
 
-    def to_bytes(self):
+    def to_bytes(self) -> bytes:
         
         if self.fixed_range is not None and not self.has_fixed_range:
             raise ValueError('Indicated non-fixed range, but fixed range was specified')
@@ -50,7 +50,7 @@ class TeleportFlags(Byteable_Object):
         self.rel_vel_z = rel_vel_z
         self.rel_rotation_vel = rel_rotation_vel
     
-    def to_bytes(self):
+    def to_bytes(self) -> bytes:
         
         tally = 0
 

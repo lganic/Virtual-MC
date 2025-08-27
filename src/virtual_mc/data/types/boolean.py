@@ -6,7 +6,7 @@ class Boolean(Byteable_Object):
 
         self.state = state
 
-    def to_bytes(self):
+    def to_bytes(self) -> bytes:
 
         if self.state:
             return bytes([1])

@@ -3,7 +3,7 @@ from ..varint import write_var_int_bytes
 
 class String(Byteable_Object, str):
 
-    def to_bytes(self):
+    def to_bytes(self) -> bytes:
         
         encoded_string = str(self).encode('utf-8')
 

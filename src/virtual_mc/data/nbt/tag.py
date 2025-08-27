@@ -40,7 +40,7 @@ class NBT_Tag:
 
         raise NotImplementedError('Payload is not implemented for object type!')
 
-    def to_bytes(self):
+    def to_bytes(self) -> bytes:
 
         base = bytes([self.type])
 

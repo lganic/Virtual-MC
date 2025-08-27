@@ -1,5 +1,5 @@
 from . import chunking
-from .array import Array
+from .array import Array, PrefixedArray
 from .bitset import BitSet
 from .boolean import Boolean
 from .chunk import Chunk

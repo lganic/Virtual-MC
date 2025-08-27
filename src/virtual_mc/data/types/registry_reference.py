@@ -31,7 +31,7 @@ class RegistryReference(Byteable_Object):
 
         return RegistryReference(id = id, value = value)
 
-    def to_bytes(self):
+    def to_bytes(self) -> bytes:
         
         if self.id == 0:
             # Inline. Encode value

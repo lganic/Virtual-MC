@@ -28,7 +28,7 @@ class PrefixedArray(Array):
     def __init__(self):
         super().__init__()
     
-    def to_bytes(self):
+    def to_bytes(self) -> bytes:
 
         # Fetch array bytes
         base_output = super().to_bytes()

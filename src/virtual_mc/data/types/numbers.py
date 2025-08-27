@@ -13,7 +13,7 @@ class Number(Byteable_Object):
 
         self.value = value
 
-    def to_bytes(self):
+    def to_bytes(self) -> bytes:
         
         # Return the bytes in little endian format
 
@@ -29,16 +29,16 @@ class Int(Number):
 
 class VarInt(Byteable_Object, int):
     
-    def to_bytes(self):
+    def to_bytes(self) -> bytes:
         
         return write_var_int_bytes(int(self))
 
 class Float(Byteable_Object, float):
 
-    def to_bytes(self):
+    def to_bytes(self) -> bytes:
         return struct.pack('f', float(self))
     
 class Double(Byteable_Object, float):
 
-    def to_bytes(self):
+    def to_bytes(self) -> bytes:
         return struct.pack('d', float(self))

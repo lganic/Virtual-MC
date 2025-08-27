@@ -12,7 +12,7 @@ class IdSet(Byteable_Object):
         self.tag_name = tag_name
         self.ids = ids
     
-    def to_bytes(self):
+    def to_bytes(self) -> bytes: 
         
         type_bytes = write_var_int_bytes(self.type)
 

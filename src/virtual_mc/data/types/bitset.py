@@ -29,7 +29,7 @@ class BitSet(Byteable_Object):
         
         return output_array
 
-    def to_bytes(self):
+    def to_bytes(self) -> bytes:
 
         output_array = Array()
 
