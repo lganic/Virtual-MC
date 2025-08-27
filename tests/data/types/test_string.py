@@ -1,5 +1,5 @@
 import pytest
-from virtual_mc.data.types.string import String
+from virtual_mc.data.types import String
 
 def test_string_conversion():
 

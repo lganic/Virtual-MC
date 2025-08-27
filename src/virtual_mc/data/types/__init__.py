@@ -1,11 +1,11 @@
 from . import chunking
-from . import array
-from . import bitset
-from . import boolean
-from . import chunk
-from . import generic
-from . import id_set
-from . import numbers
-from . import registry_data
-from . import registry_reference
-from . import string
+from .array import Array
+from .bitset import BitSet
+from .boolean import Boolean
+from .chunk import Chunk
+from .generic import Byteable_Object
+from .id_set import IdSet
+from .numbers import Long, Int, VarInt, Float, Double
+from .registry_data import SoundEvent, TeleportFlags
+from .registry_reference import RegistryReference
+from .string import String

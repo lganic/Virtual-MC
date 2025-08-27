@@ -1,5 +1,5 @@
 import pytest
-from virtual_mc.data.types.bitset import BitSet
+from virtual_mc.data.types import BitSet
 
 # Helper function to create a bitset
 def create_bitset(bitstring):
