@@ -131,7 +131,12 @@ def parse_01_packet(packet: bytes, state: State):
     
     raise NotImplementedError("I have no idea what to do with this packet.")
 
-def parse_02_packet(packet: bytes, state: int):
+def parse_02_packet(packet: bytes, state: State):
+
+    assert packet[0] == 2
+
+    if not isinstance(state, State):
+        raise ValueError("A non-state was passed to the parsing function")
 
     if state == State.CONFIGURATION:
         # Serverbound Plugin Message
