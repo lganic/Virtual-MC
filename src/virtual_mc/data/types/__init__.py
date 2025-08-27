@@ -9,3 +9,4 @@ from .numbers import Long, Int, VarInt, Float, Double
 from .registry_data import SoundEvent, TeleportFlags
 from .registry_reference import RegistryReference
 from .string import String
+from .bytes_wrapper import Bytes
