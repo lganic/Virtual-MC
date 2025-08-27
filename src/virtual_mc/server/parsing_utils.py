@@ -145,3 +145,31 @@ def parse_02_packet(packet: bytes, state: State):
         return Msg_Type.PLUGIN_MSG, (identifier, packet)
     
     raise NotImplementedError("I have no idea what to do with this packet.")
+
+def parse_07_packet(packet: bytes, state: State):
+
+    assert packet[0] == 7
+
+    if not isinstance(state, State):
+        raise ValueError("A non-state was passed to the parsing function")
+    
+    if state == State.CONFIGURATION:
+        # Serverbound Known Packs
+        num_packs, pack_data = fetch_and_read_varint(packet[1:])
+
+        packs = []
+
+        for _ in range(num_packs):
+            namespace, pack_data = parse_string(pack_data)
+            id, pack_data = parse_string(pack_data)
+            version, pack_data = parse_string(pack_data)
+
+            namespace = namespace.decode()
+            id = id.decode()
+            version = version.decode()
+
+            packs.append((namespace, id, version))
+        
+        return Msg_Type.KNOWN_PACKS_MSG, (packs,)
+
+    raise NotImplementedError("I have no idea what to do with this packet.")

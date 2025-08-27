@@ -9,3 +9,4 @@ class Msg_Type(Enum):
     CLIENT_CONFIG = 6
     LOGIN_ACK = 7
     PLUGIN_MSG = 8
+    KNOWN_PACKS_MSG = 8

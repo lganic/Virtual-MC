@@ -12,7 +12,7 @@ from typing import Tuple, List, Dict
 from ..data.varint import read_var_int_bytes, read_var_long_bytes, get_length_var_int, write_var_int_bytes
 from ..data.types import String, Boolean
 from .utilities import get_server_protocol_version, get_server_version
-from .parsing_utils import parse_00_packet, parse_01_packet, parse_02_packet
+from .parsing_utils import parse_00_packet, parse_01_packet, parse_02_packet, parse_07_packet
 from .msg_types import Msg_Type
 from .states import State
 from .client import Client
@@ -300,6 +300,22 @@ class Server:
                                 client_object.current_handshake_state = State.PLAY
 
                             print(client_object.current_handshake_state, "03 state transition", client_object.current_handshake_state)
+
+                        elif packet[0] == 7:
+                            message_type, content = parse_07_packet(packet, client_object.current_handshake_state)
+
+                            if message_type == Msg_Type.KNOWN_PACKS_MSG:
+
+                                packs = content[0]
+
+                                # Make sure that the client is reporting a bog standard install. 
+                                if len(packs) != 1:
+                                    print("Client is reporting datapacks, which aren't supported.")
+                                    break # Stop the connection
+
+                                if packs[0][0] != "minecraft" and packs[0][1] != "core" and packs[0][2] != get_server_version():
+                                    print(f"Client a datapack that is not valid: {packs}")
+                                    break # Stop the connection                                    
 
                         else:
                             raise NotImplementedError("Packet not recognized by any known type.")
