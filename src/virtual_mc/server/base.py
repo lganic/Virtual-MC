@@ -344,4 +344,4 @@ class Server:
         if self.client_conn:
             self.client_conn.close()
         self.sock.close()
-        print(client_object.current_handshake_state, "Server shut down.")
+        print("Server shut down.")
