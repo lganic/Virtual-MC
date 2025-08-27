@@ -289,7 +289,7 @@ class Server:
 
                                 # What follows this is the clientbound known packs. Send it now. 
 
-                                known_packs_packet = b'\x0E\x01' + String("minecraft").to_bytes() + String("minecraft:core").to_bytes() + String(get_server_version()).to_bytes()
+                                known_packs_packet = b'\x0E\x01' + String("minecraft").to_bytes() + String("core").to_bytes() + String(get_server_version()).to_bytes()
 
                                 pack_n_send(connection, known_packs_packet, compress=traffic_compressed, encryption_cipher=self.encrypt_ciphers[composite_address])
 
