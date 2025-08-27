@@ -117,6 +117,7 @@ class Server:
         composite_address = address[0] + ':' + str(address[1])
 
         client_object = Client()
+        client_object.current_handshake_state = State.STATUS
 
         self.client_addresses[composite_address] = address
         self.client_connections[composite_address] = connection

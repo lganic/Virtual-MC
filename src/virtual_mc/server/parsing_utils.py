@@ -73,9 +73,6 @@ def parse_00_packet(packet: bytes, state: State) -> Tuple[Literal[1, 2, 3], Tupl
 
     assert packet[0] == 0
 
-    if state is None:
-        state = State.STATUS
-
     if not isinstance(state, State):
         raise ValueError("A non-state was passed to the parsing function")
 
