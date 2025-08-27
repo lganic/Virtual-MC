@@ -281,15 +281,17 @@ class Server:
                                 plugin_identifier = content[0]
                                 plugin_data = content[1]
 
-                                # What follows this is the clientbound known packs. Send it now. 
-
-                                Arra
-
                         elif packet[0] == 3:
                             if client_object.current_handshake_state == State.LOGIN:
                                 # Configuration packet. 
 
                                 client_object.current_handshake_state = State.CONFIGURATION
+
+                                # What follows this is the clientbound known packs. Send it now. 
+
+                                known_packs_packet = b'\x0E\x01' + String("minecraft").to_bytes() + String("minecraft:core").to_bytes() + String(get_server_version()).to_bytes()
+
+                                pack_n_send(connection, known_packs_packet, compress=traffic_compressed, encryption_cipher=self.encrypt_ciphers[composite_address])
 
                             elif client_object.current_handshake_state == State.CONFIGURATION:
                                 # Play packet
