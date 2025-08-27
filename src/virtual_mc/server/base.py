@@ -211,10 +211,6 @@ class Server:
                                 client_object.locale = locale
                                 client_object.view_distance = view_distance
 
-                                # This packet means we have received all the required config info. Send the end config packet
-
-                                pack_n_send(connection, b'\x03', compress=traffic_compressed, encryption_cipher=self.encrypt_ciphers[composite_address])
-
                             continue
 
                         elif packet[0] == 1:
@@ -315,7 +311,10 @@ class Server:
 
                                 if packs[0][0] != "minecraft" and packs[0][1] != "core" and packs[0][2] != get_server_version():
                                     print(f"Client a datapack that is not valid: {packs}")
-                                    break # Stop the connection                                    
+                                    break # Stop the connection     
+
+                                # This packet means we have received all the required config info. Send the end config packet
+                                pack_n_send(connection, b'\x03', compress=traffic_compressed, encryption_cipher=self.encrypt_ciphers[composite_address])                               
 
                         else:
                             raise NotImplementedError("Packet not recognized by any known type.")
