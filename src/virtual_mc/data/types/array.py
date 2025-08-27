@@ -34,6 +34,6 @@ class PrefixedArray(Array):
         base_output = super().to_bytes()
 
         # Add varint length to packet
-        length_varint = write_var_int_bytes(len(base_output))
+        length_varint = write_var_int_bytes(len(self.objects))
 
         return length_varint + base_output
