@@ -3,7 +3,6 @@ import uuid
 from typing import Literal, Tuple
 
 from ..data.varint import read_var_int_bytes, get_length_var_int
-from . import parsing_utils
 from ..data.types import Byteable_Object
 from ..data.varint import read_var_int_bytes, get_length_var_int
 from .utilities import get_server_protocol_version
@@ -43,12 +42,12 @@ def parse_handshake(bytes):
 
     bytes = bytes[1:]
 
-    protocol_version, bytes = parsing_utils.fetch_and_read_varint(bytes)
+    protocol_version, bytes = fetch_and_read_varint(bytes)
 
     if protocol_version != SERVER_PROTOCOL_VERSION:
         print('WARNING!: Server protocol and client protocol are different!')
     
-    server_address, bytes = parsing_utils.parse_string(bytes)
+    server_address, bytes = parse_string(bytes)
 
     server_port = int.from_bytes(bytes[:2], byteorder='little')
 
