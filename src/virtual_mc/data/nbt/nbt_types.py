@@ -118,7 +118,11 @@ class NBT_Compound(_NBT_Group):
 
     default_type = TAG_COMPOUND
 
-    def __init__(self, name, is_network = False, objects: List[NBT_Tag] = list()):
+    def __init__(self, name, is_network = False, objects: List[NBT_Tag] = None):
+
+        if objects is None:
+            objects = []
+
         super().__init__(self.default_type, name, is_network = is_network)
 
         self.objects: List[NBT_Tag] = objects
@@ -203,7 +207,11 @@ class _NBT_Length_Prefixed_Array(_NBT_Group):
 
     object_type = NBT_Tag
 
-    def __init__(self, name: str, objects: List[NBT_Tag] = list()):
+    def __init__(self, name: str, objects: List[NBT_Tag] = None):
+
+        if objects is None:
+            objects = []
+
         super().__init__(self.default_type, name)
 
         self.objects = objects
